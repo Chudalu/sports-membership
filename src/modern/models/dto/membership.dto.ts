@@ -21,14 +21,14 @@ export class MembershipDto {
         this.id = membership.id;
         this.uuid = membership.uuid;
         this.name = membership.name;
-        this.userId = membership.userId;
-        this.recurringPrice = membership.recurringPrice;
-        this.validFrom = new Date(membership.validFrom).toISOString().split('T')[0];
-        this.validUntil = new Date(membership.validUntil).toISOString().split('T')[0];
         this.state = membership.state;
+        this.userId = membership.userId;
         this.assignedBy = membership.assignedBy;
         this.paymentMethod = membership.paymentMethod;
-        this.billingInterval = membership.billingInterval;
         this.billingPeriods = membership.billingPeriods;
+        this.recurringPrice = membership.recurringPrice;
+        this.billingInterval = membership.billingInterval;
+        this.validFrom = new Date(membership.validFrom).toISOString().split('T')[0];
+        this.validUntil = new Date(membership.validUntil).toISOString().split('T')[0];
     }
 }

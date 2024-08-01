@@ -24,7 +24,7 @@ export class Membership {
         this.id = memberships.length + 1;
         this.uuid = uuidv4();
         this.name = createMembership.name;
-        this.userId = createMembership.user || Math.ceil(Math.random() * 10000);
+        this.userId = createMembership.userId || Math.ceil(Math.random() * 10000);
         this.recurringPrice = createMembership.recurringPrice;
         this.validFrom = createMembership.validFrom ? new Date(createMembership.validFrom) : new Date();
         this.paymentMethod = createMembership.paymentMethod;

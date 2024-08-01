@@ -8,6 +8,8 @@ import { BillingInterval } from "../models/enum/billing-interval.enum";
 import { MembershipPeriodState } from "../models/enum/membership-period-state.enum";
 import { Response } from "express";
 import { HttpStatus } from "../models/helpers/http-status.helper";
+import { PaymentMethod } from "../models/enum/payment-method.enum";
+import { ApiResponse } from "../models/dto/api-response.dto";
 const Memberships: any[] = require('../../data/memberships.json');
 const MembershipPeriods: any[] = require('../../data/membership-periods.json');
 
@@ -16,6 +18,8 @@ export class MembershipService {
     constructor() { }
 
     createMembership(createMembership: CreateMembershipDto, response: Response): Response<MembershipResponseDto> {
+        let { invalid, message } = this.validateMembershipCreation(createMembership);
+        if (invalid) return response.status(HttpStatus.BAD).json(new ApiResponse(message));
         let membership = new Membership(createMembership);
         this.persistMembership(membership);
         let membershipPeriodsDto = this.createMembershipPeriods(membership);
@@ -55,6 +59,38 @@ export class MembershipService {
             periodStart = validUntil;
         }
         return membershipPeriods.map(p => new MembershipPeriodDto(p));
+    }
+
+    private validateMembershipCreation(CreateMembershipDto: CreateMembershipDto) {
+        let message = '';
+        let invalid = false;
+        if (CreateMembershipDto.recurringPrice > 100 && CreateMembershipDto.paymentMethod === PaymentMethod.CASH) {
+            message = "cashPriceBelow100";
+            invalid = true;
+        } else if (CreateMembershipDto.billingInterval === BillingInterval.MONTHLY) {
+            if (CreateMembershipDto.billingPeriods > 12) {
+                message = "billingPeriodsMoreThan12Months";
+                invalid = true;
+            }
+            else if (CreateMembershipDto.billingPeriods < 6) {
+                message = "billingPeriodsLessThan6Months";
+                invalid = true;
+            }
+        } else if (CreateMembershipDto.billingInterval === BillingInterval.YEARLY) {
+            if (CreateMembershipDto.billingPeriods > 3) {
+                if (CreateMembershipDto.billingPeriods > 10) {
+                    message = "billingPeriodsMoreThan10Years";
+                    invalid = true;
+                } else {
+                    message = "billingPeriodsLessThan3Years";
+                    invalid = true;
+                }
+            }
+        } else {
+            message = "invalidBillingPeriods";
+            invalid = true;
+        }
+        return { invalid, message };
     }
 
     private persistMembership(membership: Membership) {

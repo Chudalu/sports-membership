@@ -1,5 +1,7 @@
 import express, { Request, Response, Router } from "express";
 import { MembershipController } from "../controllers/membership.controller";
+import { ClassValidator } from "../middlewares/class.validator";
+import { CreateMembershipDto } from "../models/dto/create-membership.dto";
 
 export class MembershipRoutes {
   private router: Router;
@@ -12,7 +14,7 @@ export class MembershipRoutes {
 
   intializeRoutes(): Router {
     this.router.get('/', this.membershipController.getMemberships);
-    this.router.post('/', this.membershipController.createMembership);
+    this.router.post('/', ClassValidator(CreateMembershipDto), this.membershipController.createMembership);
     return this.router;
   }
 }

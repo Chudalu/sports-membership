@@ -12,9 +12,10 @@ export class MembershipPeriodDto {
     constructor(membershipPeriod: MembershipPeriod | any) {
         this.id = membershipPeriod.id;
         this.uuid = membershipPeriod.uuid;
-        this.membership = membershipPeriod.membership;
-        this.start = new Date(membershipPeriod.start).toISOString().split('T')[0];
-        this.end = new Date(membershipPeriod.end).toISOString().split('T')[0];
         this.state = membershipPeriod.state;
+        this.membership = membershipPeriod.membership;
+        this.end = new Date(membershipPeriod.end).toISOString().split('T')[0];
+        this.start = new Date(membershipPeriod.start).toISOString().split('T')[0];
+
     }
 }
