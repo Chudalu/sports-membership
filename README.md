@@ -1,6 +1,6 @@
 # Backend coding challenge
 
-### TASK SOLUTION BRIEF
+### TASK 1 SOLUTION BRIEF
 
 - I was tasked with refactoring two API implementations which are considered legacy JS codebase.
 - To refactor it, I considered code speration, cleanliness and implemented type definitions to leverage TypeScript’s type safety.
@@ -29,3 +29,36 @@ npm install
 ```sh
 npm run start
 ```
+
+
+### TASK 2 SOLUTION DIAGRAM BREAK-DOWN
+
+# Set Up API Gateway:
+
+- Create an Express.js route to handle the csv export request.
+- Validate the request and push an export csv task for a verified user to the message queue.
+
+
+# Configure Message Queue:
+
+- Set up a message queue service like RabbitMQ.
+- Ensure the queue can handle a high volume of tasks.
+
+
+# Develop Worker Service:
+
+- Create a service that listens to/consumes the message queue.
+- Fetch the membership data, generate the CSV file, and upload it to storage.
+- Notify the email service once the CSV file is ready.
+
+
+# Set Up Storage Service:
+
+- Configure a storage service like AWS S3 to store the generated CSV files.
+- Ensure secure CDN access to the stored files.
+
+
+# Configure Email Service:
+
+- Use a service like SendGrid to send emails.
+- Implement the logic/module to send an email with the CSV file link or attachment.
